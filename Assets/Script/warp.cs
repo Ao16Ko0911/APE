@@ -6,8 +6,21 @@ public class warp : MonoBehaviour
 {
     public Vector3 gravityDirection = new Vector3(0.0f, -9.81f, 0.0f); //重力の向き
     private Rigidbody rb;
-    public Transform maze1,maze2,maze3,maze4,maze5,maze6; 
+    public Transform mainCamera; //メインカメラのTransformを取得
 
+    //各迷路のtransform
+    public Transform maze1, maze2, maze3, maze4, maze5, maze6;
+
+    //ワープ情報構造体
+    [System.Serializable]
+    public class WarpInfo
+    {
+        public string triggerName; //ワープの名前
+        public Transform targetMaze; //ワープ先の迷路のTransform
+        public Vector3 localOffset; //ワープ先のオフセット
+    }
+
+    public List<WarpInfo> warpInfos = new List<WarpInfo>(); //ワープ情報のリスト
 
     // Start is called before the first frame update
     void Start()
@@ -21,20 +34,91 @@ public class warp : MonoBehaviour
         rb.AddForce(gravityDirection, ForceMode.Acceleration); //重力を加える
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-        
-    }
     void OnCollisionEnter(Collision other)
     {
-        if ((other.gameObject.name == "Warp A1 to A4") ||(other.gameObject.name == "Warp C1 to C4")) //maze1からmaze2へワープ
+        foreach (var warpInfo in warpInfos)
         {
-            gravityDirection = new Vector3(-9.81f, 0.0f, 0.0f); //重力の向きを元に戻す
-            Vector3 localOffset = new Vector3(22.5f, 1.0f, 22.5f); //ワープ先のオフセット
-            transform.rotation = maze4.rotation; //ワープ先の回転を取得
-            transform.position = maze4.TransformPoint(localOffset); //ワープ先の座標          
+            if (other.gameObject.name == warpInfo.triggerName)
+            {
+                gravityDirection = warpInfo.targetMaze.up * -9.81f; //ワープ先の重力を取得
+                transform.rotation = warpInfo.targetMaze.rotation; //ワープ先の回転を取得
+                mainCamera.rotation = warpInfo.targetMaze.rotation; //カメラの回転を取得
+                transform.position = warpInfo.targetMaze.TransformPoint(warpInfo.localOffset); //ワープ先の座標
+                break;
+            }
         }
+
+
+        //if (other.gameObject.name == "Warp A1 to A4") 
+        //{
+        //    gravityDirection = maze4.up * -9.81f; //ワープ先の重力を取得
+        //    Vector3 localOffset = new Vector3(22.5f, 1.0f, 22.5f); //ワープ先のオフセット
+        //    transform.rotation = maze4.rotation; //ワープ先の回転を取得
+        //    mainCamera.rotation = maze4.rotation; //カメラの回転を取得
+        //    transform.position = maze4.TransformPoint(localOffset); //ワープ先の座標          
+        //}
+
+        //if (other.gameObject.name == "Warp A1 to A5")
+        //{
+        //    gravityDirection = maze5.up * -9.81f; //ワープ先の重力を取得
+        //    Vector3 localOffset = new Vector3(-22.5f, 1.0f, -22.5f); //ワープ先のオフセット
+        //    transform.rotation = maze5.rotation; //ワープ先の回転を取得
+        //    mainCamera.rotation = maze5.rotation; //カメラの回転を取得
+        //    transform.position = maze5.TransformPoint(localOffset); //ワープ先の座標          
+        //}
+
+        //if (other.gameObject.name == "Warp B1 to B2")
+        //{
+        //    gravityDirection = maze2.up * -9.81f; //ワープ先の重力を取得
+        //    Vector3 localOffset = new Vector3(-22.5f, 1.0f, 22.5f); //ワープ先のオフセット
+        //    transform.rotation = maze2.rotation; //ワープ先の回転を取得
+        //    mainCamera.rotation = maze2.rotation; //カメラの回転を取得
+        //    transform.position = maze2.TransformPoint(localOffset); //ワープ先の座標          
+        //}
+
+        //if (other.gameObject.name == "Warp B1 to B5")
+        //{
+        //    gravityDirection = maze5.up * -9.81f; //ワープ先の重力を取得
+        //    Vector3 localOffset = new Vector3(22.5f, 1.0f, -22.5f); //ワープ先のオフセット
+        //    transform.rotation = maze5.rotation; //ワープ先の回転を取得
+        //    mainCamera.rotation = maze5.rotation; //カメラの回転を取得
+        //    transform.position = maze5.TransformPoint(localOffset); //ワープ先の座標          
+        //}
+
+        //if (other.gameObject.name == "Warp C1 to C4")
+        //{
+        //    gravityDirection = maze4.up * -9.81f; //ワープ先の重力を取得
+        //    Vector3 localOffset = new Vector3(22.5f, 1.0f, -22.5f); //ワープ先のオフセット
+        //    transform.rotation = maze4.rotation; //ワープ先の回転を取得
+        //    mainCamera.rotation = maze4.rotation; //カメラの回転を取得
+        //    transform.position = maze4.TransformPoint(localOffset); //ワープ先の座標          
+        //}
+
+        //if (other.gameObject.name == "Warp C1 to C6")
+        //{
+        //    gravityDirection = maze4.up * -9.81f; //ワープ先の重力を取得
+        //    Vector3 localOffset = new Vector3(-22.5f, 1.0f, 22.5f); //ワープ先のオフセット
+        //    transform.rotation = maze4.rotation; //ワープ先の回転を取得
+        //    mainCamera.rotation = maze4.rotation; //カメラの回転を取得
+        //    transform.position = maze4.TransformPoint(localOffset); //ワープ先の座標          
+        //}
+
+        //if (other.gameObject.name == "Warp D1 to D2")
+        //{
+        //    gravityDirection = maze2.up * -9.81f; //ワープ先の重力を取得
+        //    Vector3 localOffset = new Vector3(-22.5f, 1.0f, -22.5f); //ワープ先のオフセット
+        //    transform.rotation = maze2.rotation; //ワープ先の回転を取得
+        //    mainCamera.rotation = maze2.rotation; //カメラの回転を取得
+        //    transform.position = maze2.TransformPoint(localOffset); //ワープ先の座標          
+        //}
+
+        //if (other.gameObject.name == "Warp D1 to D5")
+        //{
+        //    gravityDirection = maze5.up * -9.81f; //ワープ先の重力を取得
+        //    Vector3 localOffset = new Vector3(22.5f, 1.0f, 22.5f); //ワープ先のオフセット
+        //    transform.rotation = maze5.rotation; //ワープ先の回転を取得
+        //    mainCamera.rotation = maze5.rotation; //カメラの回転を取得
+        //    transform.position = maze5.TransformPoint(localOffset); //ワープ先の座標          
+        //}
     }
 }
