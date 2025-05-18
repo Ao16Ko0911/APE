@@ -15,21 +15,27 @@ public class Item : MonoBehaviour
             {
                 int rand = Random.Range(0, 100);
 
-                if (rand < 50)
+                if(rand < 0)
                 {
-                    ps.EnableGimmick();
+                    ps.Jump(); // 0–29 → 30%
                 }
-                else if (rand < 80)
+                else if (rand < 55)
                 {
-                    ps.EnableGimmick();
+                    
+                    ps.AddTime(5.0f); // 30–54 → 25%
+                }
+                else if (rand < 100)
+                {
+                    ps.AddTime(-3.0f); // 55– → 25%
                 }
                 else
                 {
-                    ps.EnableGimmick();
+                    // 80–99 → 20%
+                    // 何もしない
                 }
 
 
-                ps.EnableGimmick();
+
             }
 
             // アイテムを消す
