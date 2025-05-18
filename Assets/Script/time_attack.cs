@@ -8,6 +8,7 @@ public class time_attack : MonoBehaviour
     [SerializeField] private TextMeshProUGUI TextTime;
     [SerializeField] private TextMeshProUGUI TextGoal;
     [SerializeField] private TextMeshProUGUI TextBestTime;
+    [SerializeField] private GameObject player;
 
     private float elapsedTime;
     private float bestTime;  // Å© í«â¡
@@ -58,6 +59,12 @@ public class time_attack : MonoBehaviour
             }
 
             Debug.Log("f_Goal = " + f_Goal);
+
+            //ÉvÉåÉCÉÑÅ[Çè¡Ç∑
+            if (player != null)
+            {
+                Destroy(player);
+            }
         }
     }
 }

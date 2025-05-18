@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,18 +6,35 @@ public class Item : MonoBehaviour
 {
     void OnTriggerEnter(Collider other)
     {
-        // ƒIƒuƒWƒFƒNƒg–¼‚ª "Player" ‚Ìê‡‚Ì‚İˆ—‚·‚é
+        // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåãŒ "Player" ã®å ´åˆã®ã¿å‡¦ç†ã™ã‚‹
         if (other.gameObject.name == "Player")
         {
-            // ƒvƒŒƒCƒ„[‚ª PlayerScript ‚ğ‚Á‚Ä‚¢‚ê‚ÎƒMƒ~ƒbƒN‚ğ•t—^
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒ PlayerScript ã‚’æŒã£ã¦ã„ã‚Œã°ã‚®ãƒŸãƒƒã‚¯ã‚’ä»˜ä¸
             Player ps = other.GetComponent<Player>();
             if (ps != null)
             {
+                int rand = Random.Range(0, 100);
+
+                if (rand < 50)
+                {
+                    ps.EnableGimmick();
+                }
+                else if (rand < 80)
+                {
+                    ps.EnableGimmick();
+                }
+                else
+                {
+                    ps.EnableGimmick();
+                }
+
+
                 ps.EnableGimmick();
             }
 
-            // ƒAƒCƒeƒ€‚ğÁ‚·
+            // ã‚¢ã‚¤ãƒ†ãƒ ã‚’æ¶ˆã™
             Destroy(gameObject);
         }
     }
 }
+
