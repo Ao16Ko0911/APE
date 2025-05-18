@@ -67,4 +67,13 @@ public class time_attack : MonoBehaviour
             }
         }
     }
+
+    //★タイム増減
+    public void AddTimeFromItem(float timeDelta)
+    {
+        elapsedTime += timeDelta;
+        if (elapsedTime < 0f) elapsedTime = 0f; // マイナスにならないように
+        TextTime.text = $"Time {elapsedTime:F2} sec";
+    }
+
 }
