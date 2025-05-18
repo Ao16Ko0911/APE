@@ -34,17 +34,19 @@ public class Player : MonoBehaviour
         }
     }
 
-    // ギミックを有効にする関数
+    //★ギミックを有効にする関数
     public void EnableGimmick()
     {
         if (!hasGimmick)
         {
             hasGimmick = true;
-            moveSpeed = 0.2f;
+            
 
             // 色を赤に変更
             GetComponent<Renderer>().material.color = Color.red;
-            Debug.Log("ギミック発動！スピードアップ！");
+            
         }
     }
+
+    //★
 }
