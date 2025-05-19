@@ -19,19 +19,31 @@ public class Item : MonoBehaviour
                 {
                     ps.Jump(); // 0–29 → 30%
                 }
-                else if (rand < 55)
+                else if (rand < 0)
                 {
                     
                     ps.AddTime(5.0f); // 30–54 → 25%
                 }
-                else if (rand < 100)
+                else if (rand < 0)
                 {
                     ps.AddTime(-3.0f); // 55– → 25%
                 }
+                else if (rand < 0)// 80–99 → ランダムワープ
+                {
+                    warp w = ps.GetComponent<warp>();
+                    if (w != null)
+                    {
+                        w.WarpToRandomPoint();
+                    }
+                }
                 else
                 {
-                    // 80–99 → 20%
-                    // 何もしない
+                    // 90–99 → ワープ地点をランダムで複数削除
+                    warp w = ps.GetComponent<warp>();
+                    if (w != null)
+                    {
+                        w.RemoveRandomWarpPoints(3); // 例: 3個削除
+                    }
                 }
 
 
