@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class move_player : MonoBehaviour
 {
+
     [SerializeField] private Vector3 velocity;              // 移動方向
     [SerializeField] private float moveSpeed = 5.0f;        // 移動速度
     [SerializeField] private move_camera refCamera;  // カメラの水平回転を参照する用
@@ -16,7 +18,7 @@ public class move_player : MonoBehaviour
 
     void Update()
     {
-        // WASD入力から、XZ平面(水平な地面)を移動する方向(velocity)を得ます
+        // WASD入力から、XZ平面(水平な地面)を移動する方向(velocity)を得る
         velocity = Vector3.zero;
         if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
             velocity.z -= 1 * buff;
@@ -37,8 +39,8 @@ public class move_player : MonoBehaviour
             // 無回転状態のプレイヤーのZ+方向(後頭部)を、
             // カメラの水平回転(refCamera.hRotation)で回した移動の反対方向(-velocity)に回す回転に段々近づける
             transform.rotation = Quaternion.Slerp(transform.rotation,
-                                                  Quaternion.LookRotation(refCamera.hRotation * -velocity),
-                                                  applySpeed);
+                                                    Quaternion.LookRotation(refCamera.hRotation * -velocity),
+                                                    applySpeed);
 
             // プレイヤーの位置(transform.position)の更新
             // カメラの水平回転(refCamera.hRotation)で回した移動方向(velocity)を足し込み

@@ -39,7 +39,7 @@ public class move_camera : MonoBehaviour
         float mx = Input.GetAxis("Mouse X") * 2.0f;
         float my = Input.GetAxis("Mouse Y") * 1.5f;
 
-        hRotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * 2.0f, 0);
+        hRotation *= Quaternion.Euler(0, mx, 0);
 
         // X•ûŒü‚Éˆê’è—ÊˆÚ“®‚µ‚Ä‚¢‚ê‚Î‰¡‰ñ“]
         if (Mathf.Abs(mx) > 0.01f)
