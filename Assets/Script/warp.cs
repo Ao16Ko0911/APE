@@ -20,6 +20,7 @@ public class warp : MonoBehaviour
         public Vector3 localOffset; //ワープ先のオフセット
     }
 
+    [HideInInspector]
     public List<WarpInfo> warpInfos = new List<WarpInfo>(); //ワープ情報のリスト
 
     // Start is called before the first frame update
@@ -121,4 +122,64 @@ public class warp : MonoBehaviour
         //    transform.position = maze5.TransformPoint(localOffset); //ワープ先の座標          
         //}
     }
+
+    //★Itemギミックワープの追加
+    public void WarpToRandomPoint()
+    {
+        if (warpInfos.Count == 0) return;
+
+        int index = Random.Range(0, warpInfos.Count);
+        WarpInfo selectedWarp = warpInfos[index];
+
+        // プレイヤーの色を黒にして1秒後に戻す
+        StartCoroutine(ChangeColorTemporarily(Color.yellow, 1f));
+
+        gravityDirection = selectedWarp.targetMaze.up * -9.81f;
+        transform.rotation = selectedWarp.targetMaze.rotation;
+        mainCamera.rotation = selectedWarp.targetMaze.rotation;
+        transform.position = selectedWarp.targetMaze.TransformPoint(selectedWarp.localOffset);
+    }
+
+    //★色を一定期間変更
+    private IEnumerator ChangeColorTemporarily(Color tempColor, float duration)
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        if (renderers.Length == 0) yield break;
+
+        Color originalColor = renderers[0].material.color;
+
+        foreach (var r in renderers)
+            r.material.color = tempColor;
+
+        yield return new WaitForSeconds(duration);
+
+        foreach (var r in renderers)
+            r.material.color = originalColor;
+    }
+
+    public void RemoveRandomWarpPoints(int count)
+    {
+        if (warpInfos.Count == 0) return;
+
+        // シャッフルして上からcount個取る
+        List<WarpInfo> tempList = new List<WarpInfo>(warpInfos);
+        int removeCount = Mathf.Min(count, tempList.Count);
+
+        for (int i = 0; i < removeCount; i++)
+        {
+            int index = Random.Range(0, tempList.Count);
+            WarpInfo selected = tempList[index];
+            tempList.RemoveAt(index); // もう選ばれないようにする
+
+            // triggerNameと一致するGameObjectを探して削除
+            GameObject target = GameObject.Find(selected.triggerName);
+            if (target != null)
+            {
+                Destroy(target);
+            }
+
+            warpInfos.Remove(selected);
+        }
+    }
+
 }
