@@ -161,6 +161,9 @@ public class warp : MonoBehaviour
     {
         if (warpInfos.Count == 0) return;
 
+
+        StartCoroutine(ChangeColorTemporarily(Color.black, 0.5f));
+
         // ƒVƒƒƒbƒtƒ‹‚µ‚Äã‚©‚çcountŒÂæ‚é
         List<WarpInfo> tempList = new List<WarpInfo>(warpInfos);
         int removeCount = Mathf.Min(count, tempList.Count);
