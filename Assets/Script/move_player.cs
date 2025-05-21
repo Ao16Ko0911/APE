@@ -12,11 +12,18 @@ public class move_player : MonoBehaviour
     [SerializeField] private float applySpeed = 0.2f; //回転速度
     [SerializeField] private float buff;
 
+    //ギミック系
+    private bool hasJump = false; // ギミック取得済みか
+    private float jumpPower = 5.0f;
+    private Rigidbody rb;
+    private bool isGrounded = false; // ← 接地フラグ追加
+
     private Quaternion hRotation;
     private Vector3 pastG;
 
     void Start() {
         hRotation = Quaternion.identity;
+        rb = GetComponent<Rigidbody>();
         //最初の重力方向の取得
         warp wp = GetComponent<warp>();
         pastG = wp.gravityDirection / -9.81f;
@@ -96,7 +103,85 @@ public class move_player : MonoBehaviour
         transform.position += hRotation * velocity;
 
         pastG = curG;
+
+        if (hasJump && isGrounded && Input.GetKeyDown(KeyCode.Space))
+        {
+            rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+        }
     }
+
+    // ★ジャンプ付与（外部から呼ばれる）
+    public void Jump()
+    {
+        if (!hasJump)
+        {
+            hasJump = true;
+            GetComponent<Renderer>().material.color = Color.red;
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+            StartCoroutine(JumpTimeLimit(10f));
+        }
+    }
+
+    private IEnumerator JumpTimeLimit(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        hasJump = false;
+        GetComponent<Renderer>().material.color = Color.white;
+    }
+
+    // ★ 接地判定（地面との接触を確認）
+    void OnCollisionStay(Collision collision)
+    {
+        // 地面と接触しているときだけtrue（Layerやタグで絞ってもOK）
+        isGrounded = true;
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        isGrounded = false;
+    }
+
+    // ★タイム増減（外部から呼ばれる）
+    public void AddTime(float timeDelta)
+    {
+        GetComponent<Renderer>().material.color = Color.blue;
+        time_attack ta = FindObjectOfType<time_attack>();
+        if (ta != null)
+        {
+            ta.AddTimeFromItem(timeDelta);
+        }
+    }
+
+    public void Speed(float multiplier, float duration)
+    {
+        StartCoroutine(SpeedBuff(multiplier, duration));
+    }
+
+    private IEnumerator SpeedBuff(float multiplier, float duration)
+    {
+        float originalSpeed = moveSpeed;
+        moveSpeed *= multiplier;
+        GetComponent<Renderer>().material.color = Color.gray; // 色でバフを表現
+        yield return new WaitForSeconds(duration);
+        moveSpeed = originalSpeed;
+        GetComponent<Renderer>().material.color = Color.white;
+    }
+
+    public void Reduce(float factor, float duration)
+    {
+        StartCoroutine(SpeedDebuffRoutine(factor, duration));
+    }
+
+    private IEnumerator SpeedDebuffRoutine(float factor, float duration)
+    {
+        float originalSpeed = moveSpeed;
+        moveSpeed *= factor; // 例: factor = 0.5f で半分の速度に
+        GetComponent<Renderer>().material.color = Color.cyan; // 色を水色に
+        yield return new WaitForSeconds(duration);
+        moveSpeed = originalSpeed;
+        GetComponent<Renderer>().material.color = Color.white; // 元の色に戻す
+    }
+
 
 }
 

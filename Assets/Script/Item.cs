@@ -10,25 +10,26 @@ public class Item : MonoBehaviour
         if (other.gameObject.name == "Player")
         {
             // プレイヤーが PlayerScript を持っていればギミックを付与
-            Player ps = other.GetComponent<Player>();
+            move_player ps = other.GetComponent<move_player>();
+
             if (ps != null)
             {
                 int rand = Random.Range(0, 100);
 
-                if(rand < 0)
+                if(rand < 10)
                 {
                     ps.Jump(); // 0–29 → 30%
                 }
-                else if (rand < 0)
+                else if (rand < 30)
                 {
                     
                     ps.AddTime(5.0f); // 30–54 → 25%
                 }
-                else if (rand < 0)
+                else if (rand < 50)
                 {
-                    ps.AddTime(-3.0f); // 55– → 25%
+                    ps.AddTime(-5.0f); // 55– → 25%
                 }
-                else if (rand < 0)// 80–99 → ランダムワープ
+                else if (rand < 51)// 80–99 → ランダムワープ
                 {
                     warp w = ps.GetComponent<warp>();
                     if (w != null)
@@ -36,6 +37,20 @@ public class Item : MonoBehaviour
                         w.WarpToRandomPoint();
                     }
                 }
+
+                else if (rand < 70)
+                {
+                    // 60〜69の10%でスピードバフ付与
+                    ps.Speed(4.0f, 5.0f); // 5秒間スピード2倍
+                }
+
+                else if (rand < 89)
+                {
+                    ps.Reduce(0.5f, 5.0f); // スピード半分、5秒間
+                }
+
+
+
                 else
                 {
                     // 90–99 → ワープ地点をランダムで複数削除

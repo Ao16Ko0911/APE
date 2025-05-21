@@ -21,7 +21,7 @@ public class warp : MonoBehaviour
         public Vector3 localOffset; //ワープ先のオフセット
     }
 
-    [HideInInspector]
+   
     public List<WarpInfo> warpInfos = new List<WarpInfo>(); //ワープ情報のリスト
 
     // Start is called before the first frame update
