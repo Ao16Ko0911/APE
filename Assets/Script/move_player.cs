@@ -6,57 +6,79 @@ using UnityEngine.InputSystem;
 public class move_player : MonoBehaviour
 {
 
-    [SerializeField] private Vector3 velocity;              // ˆÚ“®•ûŒü
-    [SerializeField] private float moveSpeed = 5.0f;        // ˆÚ“®‘¬“x
-    [SerializeField] private move_camera refCamera;  // ƒJƒƒ‰‚Ì‰ñ“]‚ğQÆ‚·‚é—p
-    [SerializeField] private float applySpeed = 0.2f; //‰ñ“]‘¬“x
-    [SerializeField] private float buff;
+    [SerializeField] private Vector3 velocity;              // ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] private float moveSpeed = 5.0f;        // ï¿½Ú“ï¿½ï¿½ï¿½ï¿½x
+    [SerializeField] private move_camera refCamera;  // ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Ì‰ï¿½]ï¿½ï¿½ï¿½Qï¿½Æ‚ï¿½ï¿½ï¿½p
+    //[SerializeField] private float applySpeed = 0.2f; //ï¿½ï¿½]ï¿½ï¿½ï¿½x
+    [SerializeField] private float buff; //ï¿½ï¿½ï¿½ï¿½ï¿½Eï¿½ï¿½ï¿½ï¿½ï¿½oï¿½t
 
-    //ƒMƒ~ƒbƒNŒn
-    private bool hasJump = false; // ƒMƒ~ƒbƒNæ“¾Ï‚İ‚©
+    //ï¿½Mï¿½~ï¿½bï¿½Nï¿½n
+    private bool hasJump = false; // ï¿½Mï¿½~ï¿½bï¿½Nï¿½æ“¾ï¿½Ï‚İ‚ï¿½
     private float jumpPower = 5.0f;
     private Rigidbody rb;
-    private bool isGrounded = false; // © Ú’nƒtƒ‰ƒO’Ç‰Á
+    private bool isGrounded = false; // ï¿½ï¿½ ï¿½Ú’nï¿½tï¿½ï¿½ï¿½Oï¿½Ç‰ï¿½
 
     
 
     private Quaternion hRotation;
     private Vector3 pastG;
+    private bool warp_flag;
 
     void Start()
     {
         hRotation = Quaternion.identity;
         rb = GetComponent<Rigidbody>();
-        //Å‰‚Ìd—Í•ûŒü‚Ìæ“¾
+        //ï¿½Åï¿½ï¿½Ìdï¿½Í•ï¿½ï¿½ï¿½ï¿½Ìæ“¾
         warp wp = GetComponent<warp>();
-        pastG = wp.gravityDirection / -9.81f;
-
+        pastG = wp.gravityDirection / 9.81f;
     }
 
     void Update()
     {
-        //‘¬“xƒxƒNƒgƒ‹‚Ì‰Šú‰»
+        //ï¿½ï¿½ï¿½xï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½
         velocity = Vector3.zero;
 
         warp wp = GetComponent<warp>();
         Vector3 curG = wp.gravityDirection / 9.81f;
-        if(curG != pastG )
-        {
-            hRotation = Quaternion.identity;
-        }
+        //ï¿½dï¿½Í•ï¿½ï¿½ï¿½ï¿½ÆC WASDï¿½ï¿½ï¿½Í‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Lï¿½[ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½È’nï¿½Ê‚ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(velocity)ï¿½ğ“¾‚ï¿½
         if (curG == Vector3.down) //Maze1
         {
-            //d—Í•ûŒü‚ÆC WASD“ü—Í‚©•ûŒüƒL[‚©‚çAXZ•½–Ê(…•½‚È’n–Ê)‚ğˆÚ“®‚·‚é•ûŒü(velocity)‚ğ“¾‚é
             if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
+                velocity.z += 1 * buff;
+            if (Input.GetKey(KeyCode.A) || Input.GetKey("left"))
+                velocity.x -= 1 * buff;
+            if (Input.GetKey(KeyCode.S) || Input.GetKey("down"))
                 velocity.z -= 1 * buff;
+            if (Input.GetKey(KeyCode.D) || Input.GetKey("right"))
+                velocity.x += 1 * buff;
+
+            refCamera.hRotation *= Quaternion.Euler(0, refCamera.mx, 0);
+        }
+        else if (curG == Vector3.right) //Maze2
+        {
+            if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
+                velocity.y += 1 * buff;
+            if (Input.GetKey(KeyCode.A) || Input.GetKey("left"))
+                velocity.z += 1 * buff;
+            if (Input.GetKey(KeyCode.S) || Input.GetKey("down"))
+                velocity.y -= 1 * buff;
+            if (Input.GetKey(KeyCode.D) || Input.GetKey("right"))
+                velocity.z -= 1 * buff;
+
+            refCamera.hRotation *= Quaternion.Euler(-refCamera.mx, 0, 0);
+        }
+        else if (curG == Vector3.up) //Maze3
+        {
+            if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
+                velocity.z += 1 * buff;
             if (Input.GetKey(KeyCode.A) || Input.GetKey("left"))
                 velocity.x += 1 * buff;
             if (Input.GetKey(KeyCode.S) || Input.GetKey("down"))
-                velocity.z += 1 * buff;
+                velocity.z -= 1 * buff;
             if (Input.GetKey(KeyCode.D) || Input.GetKey("right"))
                 velocity.x -= 1 * buff;
 
-            hRotation *= Quaternion.Euler(0, refCamera.mx, 0);
+            refCamera.hRotation *= Quaternion.Euler(0, -refCamera.mx, 0);
         }
         else if (curG == Vector3.left) //Maze4
         {
@@ -69,7 +91,7 @@ public class move_player : MonoBehaviour
             if (Input.GetKey(KeyCode.D) || Input.GetKey("right"))
                 velocity.z += 1 * buff;
 
-            hRotation *= Quaternion.Euler(refCamera.mx, 0, 0);
+            refCamera.hRotation *= Quaternion.Euler(refCamera.mx, 0, 0);
         }
         else if (curG == Vector3.forward) //Maze5
         {
@@ -82,29 +104,43 @@ public class move_player : MonoBehaviour
             if (Input.GetKey(KeyCode.D) || Input.GetKey("right"))
                 velocity.x += 1 * buff;
 
-            hRotation *= Quaternion.Euler(0, 0, -refCamera.mx);
+            refCamera.hRotation *= Quaternion.Euler(0, 0, -refCamera.mx);
         }
-        
-        // ‘¬“xƒxƒNƒgƒ‹‚Ì’·‚³‚ğ1•b‚ÅmoveSpeed‚¾‚¯i‚Ş‚æ‚¤‚É’²®
+        else if (curG == Vector3.back) //Maze6
+        {
+            if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
+                velocity.y += 1 * buff;
+            if (Input.GetKey(KeyCode.A) || Input.GetKey("left"))
+                velocity.x += 1 * buff;
+            if (Input.GetKey(KeyCode.S) || Input.GetKey("down"))
+                velocity.y -= 1 * buff;
+            if (Input.GetKey(KeyCode.D) || Input.GetKey("right"))
+                velocity.x -= 1 * buff;
+
+            refCamera.hRotation *= Quaternion.Euler(0, 0, refCamera.mx);
+        }
+
+        // ï¿½ï¿½ï¿½xï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½Ì’ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½bï¿½ï¿½moveSpeedï¿½ï¿½ï¿½ï¿½ï¿½iï¿½Ş‚æ‚¤ï¿½É’ï¿½ï¿½ï¿½
         velocity = velocity.normalized * moveSpeed * Time.deltaTime;
 
        
         
-        // ‚¢‚¸‚ê‚©‚Ì•ûŒü‚ÉˆÚ“®‚µ‚Ä‚¢‚éê‡
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ê‚©ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ÉˆÚ“ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡
         if (velocity.magnitude > 0)
         {
-            // ƒvƒŒƒCƒ„[‚Ì‰ñ“](transform.rotation)‚ÌXV
-            // –³‰ñ“]ó‘Ô‚ÌƒvƒŒƒCƒ„[‚ÌZ+•ûŒü(Œã“ª•”)‚ğA
-            // ƒJƒƒ‰‚Ì…•½‰ñ“](refCamera.hRotation)‚Å‰ñ‚µ‚½ˆÚ“®‚Ì”½‘Î•ûŒü(-velocity)‚É‰ñ‚·‰ñ“]‚É’iX‹ß‚Ã‚¯‚é
+            // ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì‰ï¿½](transform.rotation)ï¿½ÌXï¿½V
+            // ï¿½ï¿½ï¿½ï¿½]ï¿½ï¿½Ô‚Ìƒvï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½Z+ï¿½ï¿½ï¿½ï¿½(ï¿½ã“ªï¿½ï¿½)ï¿½ï¿½ï¿½A
+            // ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½](refCamera.hRotation)ï¿½Å‰ñ‚µ‚ï¿½ï¿½Ú“ï¿½ï¿½Ì”ï¿½ï¿½Î•ï¿½ï¿½ï¿½(-velocity)ï¿½É‰ñ‚·‰ï¿½]ï¿½É’iï¿½Xï¿½ß‚Ã‚ï¿½ï¿½ï¿½
             //transform.rotation = Quaternion.Slerp(transform.rotation,
             //                                       Quaternion.LookRotation(hRotation * -velocity),
             //                                       applySpeed);
-            transform.rotation = Quaternion.LookRotation(hRotation * velocity);
+
+            transform.rotation = Quaternion.LookRotation(refCamera.hRotation * velocity);
         }
-        
-        // ƒvƒŒƒCƒ„[‚ÌˆÊ’u(transform.position)‚ÌXV
-        // ƒJƒƒ‰‚Ì…•½‰ñ“](refCamera.hRotation)‚Å‰ñ‚µ‚½ˆÚ“®•ûŒü(velocity)‚ğ‘«‚µ‚İ
-        transform.position += hRotation * velocity;
+
+        // ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌˆÊ’u(transform.position)ï¿½ÌXï¿½V
+        // ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½](refCamera.hRotation)ï¿½Å‰ñ‚µ‚ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½(velocity)ï¿½ğ‘«‚ï¿½ï¿½ï¿½ï¿½ï¿½
+        transform.position += refCamera.hRotation * velocity;
 
         pastG = curG;
 
@@ -114,7 +150,7 @@ public class move_player : MonoBehaviour
         }
     }
 
-    // šƒWƒƒƒ“ƒv•t—^iŠO•”‚©‚çŒÄ‚Î‚ê‚éj
+    // ï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½vï¿½tï¿½^ï¿½iï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚Î‚ï¿½ï¿½j
     public void Jump()
     {
         if (!hasJump)
@@ -133,10 +169,10 @@ public class move_player : MonoBehaviour
         GetComponent<Renderer>().material.color = Color.white;
     }
 
-    // š Ú’n”»’èi’n–Ê‚Æ‚ÌÚG‚ğŠm”Fj
+    // ï¿½ï¿½ ï¿½Ú’nï¿½ï¿½ï¿½ï¿½iï¿½nï¿½Ê‚Æ‚ÌÚGï¿½ï¿½ï¿½mï¿½Fï¿½j
     void OnCollisionStay(Collision collision)
     {
-        // ’n–Ê‚ÆÚG‚µ‚Ä‚¢‚é‚Æ‚«‚¾‚¯trueiLayer‚âƒ^ƒO‚Åi‚Á‚Ä‚àOKj
+        // ï¿½nï¿½Ê‚ÆÚGï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½trueï¿½iLayerï¿½ï¿½^ï¿½Oï¿½Åiï¿½ï¿½ï¿½Ä‚ï¿½OKï¿½j
         isGrounded = true;
     }
 
@@ -145,7 +181,7 @@ public class move_player : MonoBehaviour
         isGrounded = false;
     }
 
-    // šƒ^ƒCƒ€‘Œ¸iŠO•”‚©‚çŒÄ‚Î‚ê‚éj
+    // ï¿½ï¿½ï¿½^ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚Î‚ï¿½ï¿½j
     public void AddTime(float timeDelta)
     {
         GetComponent<Renderer>().material.color = Color.blue;
@@ -165,7 +201,7 @@ public class move_player : MonoBehaviour
     {
         float originalSpeed = moveSpeed;
         moveSpeed *= multiplier;
-        GetComponent<Renderer>().material.color = Color.gray; // F‚Åƒoƒt‚ğ•\Œ»
+        GetComponent<Renderer>().material.color = Color.gray; // ï¿½Fï¿½Åƒoï¿½tï¿½ï¿½\ï¿½ï¿½
         yield return new WaitForSeconds(duration);
         moveSpeed = originalSpeed;
         GetComponent<Renderer>().material.color = Color.white;
@@ -179,11 +215,11 @@ public class move_player : MonoBehaviour
     private IEnumerator SpeedDebuffRoutine(float factor, float duration)
     {
         float originalSpeed = moveSpeed;
-        moveSpeed *= factor; // —á: factor = 0.5f ‚Å”¼•ª‚Ì‘¬“x‚É
-        GetComponent<Renderer>().material.color = Color.cyan; // F‚ğ…F‚É
+        moveSpeed *= factor; // ï¿½ï¿½: factor = 0.5f ï¿½Å”ï¿½ï¿½ï¿½ï¿½Ì‘ï¿½ï¿½xï¿½ï¿½
+        GetComponent<Renderer>().material.color = Color.cyan; // ï¿½Fï¿½ğ…Fï¿½ï¿½
         yield return new WaitForSeconds(duration);
         moveSpeed = originalSpeed;
-        GetComponent<Renderer>().material.color = Color.white; // Œ³‚ÌF‚É–ß‚·
+        GetComponent<Renderer>().material.color = Color.white; // ï¿½ï¿½ï¿½ÌFï¿½É–ß‚ï¿½
     }
 
     

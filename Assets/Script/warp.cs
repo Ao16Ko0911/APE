@@ -4,39 +4,39 @@ using UnityEngine;
 
 public class warp : MonoBehaviour
 {
-    public Vector3 gravityDirection = new Vector3(0.0f, -9.81f, 0.0f); //d—Í‚ÌŒü‚«
+    public Vector3 gravityDirection = new Vector3(0.0f, -9.81f, 0.0f); //ï¿½dï¿½Í‚ÌŒï¿½ï¿½ï¿½
     private Rigidbody rb;
-    public Transform mainCamera; //ƒƒCƒ“ƒJƒƒ‰‚ÌTransform‚ğæ“¾
+    public Transform mainCamera; //ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Transformï¿½ï¿½ï¿½æ“¾
 
-    //Še–À˜H‚Ìtransform
+    //ï¿½eï¿½ï¿½ï¿½Hï¿½ï¿½transform
     public Transform maze1, maze2, maze3, maze4, maze5, maze6;
     public Transform Player;
 
-    //ƒ[ƒvî•ñ\‘¢‘Ì
+    //ï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½ï¿½
     [System.Serializable]
     public class WarpInfo
     {
-        public string triggerName; //ƒ[ƒv‚Ì–¼‘O
-        public Transform targetMaze; //ƒ[ƒvæ‚Ì–À˜H‚ÌTransform
-        public Vector3 localOffset; //ƒ[ƒvæ‚ÌƒIƒtƒZƒbƒg
+        public string triggerName; //ï¿½ï¿½ï¿½[ï¿½vï¿½Ì–ï¿½ï¿½O
+        public Transform targetMaze; //ï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½Ì–ï¿½ï¿½Hï¿½ï¿½Transform
+        public Vector3 localOffset; //ï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½ÌƒIï¿½tï¿½Zï¿½bï¿½g
     }
 
    
-    public List<WarpInfo> warpInfos = new List<WarpInfo>(); //ƒ[ƒvî•ñ‚ÌƒŠƒXƒg
+    public List<WarpInfo> warpInfos = new List<WarpInfo>(); //ï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½ï¿½Ìƒï¿½ï¿½Xï¿½g
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.useGravity = false; //d—Í‚ğ–³Œø‚É‚·‚é
+        rb.useGravity = false; //ï¿½dï¿½Í‚ğ–³Œï¿½ï¿½É‚ï¿½ï¿½ï¿½
     }
 
     void FixedUpdate()
     {
-        rb.AddForce(gravityDirection, ForceMode.Acceleration); // d—Í‚ğ‰Á‚¦‚é
+        rb.AddForce(gravityDirection, ForceMode.Acceleration); // ï¿½dï¿½Í‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-        // ƒvƒŒƒCƒ„[‚ğd—Í‚Ì‹t•ûŒüiã•ûŒüj‚É‰ñ“]‚³‚¹‚é
-        Quaternion Player = Quaternion.FromToRotation(transform.up, -gravityDirection.normalized) * transform.rotation;
+        // ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½dï¿½Í‚Ì‹tï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½jï¿½É‰ï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        Quaternion Player = Quaternion.FromToRotation(transform.up, -1 * gravityDirection.normalized) * transform.rotation;
     
     }
 
@@ -46,16 +46,18 @@ public class warp : MonoBehaviour
         {
             if (other.gameObject.name == warpInfo.triggerName)
             {
-                gravityDirection = warpInfo.targetMaze.up * -9.81f; //ƒ[ƒvæ‚Ìd—Í‚ğæ“¾
-                transform.rotation = warpInfo.targetMaze.rotation; //ƒ[ƒvæ‚Ì‰ñ“]‚ğæ“¾
-                mainCamera.rotation = warpInfo.targetMaze.rotation; //ƒJƒƒ‰‚Ì‰ñ“]‚ğæ“¾
-                transform.position = warpInfo.targetMaze.TransformPoint(warpInfo.localOffset); //ƒ[ƒvæ‚ÌÀ•W
+                gravityDirection = warpInfo.targetMaze.up * -9.81f; //ï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½Ìdï¿½Í‚ï¿½ï¿½æ“¾
+                transform.rotation = warpInfo.targetMaze.rotation; //ï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½Ì‰ï¿½]ï¿½ï¿½ï¿½æ“¾
+                mainCamera.rotation = warpInfo.targetMaze.rotation; //ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Ì‰ï¿½]ï¿½ï¿½ï¿½æ“¾
+                transform.position = warpInfo.targetMaze.TransformPoint(warpInfo.localOffset); //ï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½Ìï¿½ï¿½W
+                move_camera cam = mainCamera.GetComponent<move_camera>();
+                cam.GetComponent<move_camera>().SetJustWarped(); // ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½É•tï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½Nï¿½ï¿½ï¿½vï¿½gï¿½É’Ê’m
                 break;
             }
         }
     }
 
-    //šItemƒMƒ~ƒbƒNƒ[ƒv‚Ì’Ç‰Á
+    //ï¿½ï¿½Itemï¿½Mï¿½~ï¿½bï¿½Nï¿½ï¿½ï¿½[ï¿½vï¿½Ì’Ç‰ï¿½
     public void WarpToRandomPoint()
     {
         if (warpInfos.Count == 0) return;
@@ -63,7 +65,7 @@ public class warp : MonoBehaviour
         int index = Random.Range(0, warpInfos.Count);
         WarpInfo selectedWarp = warpInfos[index];
 
-        // ƒvƒŒƒCƒ„[‚ÌF‚ğ•‚É‚µ‚Ä1•bŒã‚É–ß‚·
+        // ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌFï¿½ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½1ï¿½bï¿½ï¿½É–ß‚ï¿½
         StartCoroutine(ChangeColorTemporarily(Color.yellow, 1f));
 
         gravityDirection = selectedWarp.targetMaze.up * -9.81f;
@@ -72,7 +74,7 @@ public class warp : MonoBehaviour
         transform.position = selectedWarp.targetMaze.TransformPoint(selectedWarp.localOffset);
     }
 
-    //šF‚ğˆê’èŠúŠÔ•ÏX
+    //ï¿½ï¿½ï¿½Fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô•ÏX
     private IEnumerator ChangeColorTemporarily(Color tempColor, float duration)
     {
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
@@ -96,7 +98,7 @@ public class warp : MonoBehaviour
 
         StartCoroutine(ChangeColorTemporarily(Color.black, 0.5f));
 
-        // ƒVƒƒƒbƒtƒ‹‚µ‚Äã‚©‚çcountŒÂæ‚é
+        // ï¿½Vï¿½ï¿½ï¿½bï¿½tï¿½ï¿½ï¿½ï¿½ï¿½Äã‚©ï¿½ï¿½countï¿½Âï¿½ï¿½
         List<WarpInfo> tempList = new List<WarpInfo>(warpInfos);
         int removeCount = Mathf.Min(count, tempList.Count);
 
@@ -104,9 +106,9 @@ public class warp : MonoBehaviour
         {
             int index = Random.Range(0, tempList.Count);
             WarpInfo selected = tempList[index];
-            tempList.RemoveAt(index); // ‚à‚¤‘I‚Î‚ê‚È‚¢‚æ‚¤‚É‚·‚é
+            tempList.RemoveAt(index); // ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½Î‚ï¿½È‚ï¿½ï¿½æ‚¤ï¿½É‚ï¿½ï¿½ï¿½
 
-            // triggerName‚Æˆê’v‚·‚éGameObject‚ğ’T‚µ‚Äíœ
+            // triggerNameï¿½Æˆï¿½vï¿½ï¿½ï¿½ï¿½GameObjectï¿½ï¿½Tï¿½ï¿½ï¿½Äíœ
             GameObject target = GameObject.Find(selected.triggerName);
             if (target != null)
             {
