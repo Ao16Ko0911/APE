@@ -1,10 +1,10 @@
-/*
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class move_player : MonoBehaviour
+public class Player : MonoBehaviour
 {
 
     [SerializeField] private Vector3 velocity;              // ˆÚ“®•ûŒü
@@ -186,4 +186,4 @@ public class move_player : MonoBehaviour
 
 
 }
-*/
+

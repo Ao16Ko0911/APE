@@ -18,15 +18,19 @@ public class move_player : MonoBehaviour
     private Rigidbody rb;
     private bool isGrounded = false; // ← 接地フラグ追加
 
+    
+
     private Quaternion hRotation;
     private Vector3 pastG;
 
-    void Start() {
+    void Start()
+    {
         hRotation = Quaternion.identity;
         rb = GetComponent<Rigidbody>();
         //最初の重力方向の取得
         warp wp = GetComponent<warp>();
         pastG = wp.gravityDirection / -9.81f;
+
     }
 
     void Update()
@@ -182,6 +186,7 @@ public class move_player : MonoBehaviour
         GetComponent<Renderer>().material.color = Color.white; // 元の色に戻す
     }
 
+    
 
 }
 
