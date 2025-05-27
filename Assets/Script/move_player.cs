@@ -6,31 +6,41 @@ using UnityEngine.InputSystem;
 public class move_player : MonoBehaviour
 {
 
-    [SerializeField] private Vector3 velocity;              // ˆÚ“®•ûŒü
-    [SerializeField] private float moveSpeed = 5.0f;        // ˆÚ“®‘¬“x
-    [SerializeField] private move_camera refCamera;  // ƒJƒƒ‰‚Ì‰ñ“]‚ğQÆ‚·‚é—p
-    //[SerializeField] private float applySpeed = 0.2f; //‰ñ“]‘¬“x
-    [SerializeField] private float buff; //‰Á‘¬EŒ¸‘¬ƒoƒt
+    [SerializeField] private Vector3 velocity;              // ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] private float moveSpeed = 5.0f;        // ï¿½Ú“ï¿½ï¿½ï¿½ï¿½x
+    [SerializeField] private move_camera refCamera;  // ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Ì‰ï¿½]ï¿½ï¿½ï¿½Qï¿½Æ‚ï¿½ï¿½ï¿½p
+    //[SerializeField] private float applySpeed = 0.2f; //ï¿½ï¿½]ï¿½ï¿½ï¿½x
+    [SerializeField] private float buff; //ï¿½ï¿½ï¿½ï¿½ï¿½Eï¿½ï¿½ï¿½ï¿½ï¿½oï¿½t
+
+    //ï¿½Mï¿½~ï¿½bï¿½Nï¿½n
+    private bool hasJump = false; // ï¿½Mï¿½~ï¿½bï¿½Nï¿½æ“¾ï¿½Ï‚İ‚ï¿½
+    private float jumpPower = 5.0f;
+    private Rigidbody rb;
+    private bool isGrounded = false; // ï¿½ï¿½ ï¿½Ú’nï¿½tï¿½ï¿½ï¿½Oï¿½Ç‰ï¿½
+
+    
 
     private Quaternion hRotation;
     private Vector3 pastG;
     private bool warp_flag;
 
-    void Start() {
+    void Start()
+    {
         hRotation = Quaternion.identity;
-        //Å‰‚Ìd—Í•ûŒü‚Ìæ“¾
+        rb = GetComponent<Rigidbody>();
+        //ï¿½Åï¿½ï¿½Ìdï¿½Í•ï¿½ï¿½ï¿½ï¿½Ìæ“¾
         warp wp = GetComponent<warp>();
         pastG = wp.gravityDirection / 9.81f;
     }
 
     void Update()
     {
-        //‘¬“xƒxƒNƒgƒ‹‚Ì‰Šú‰»
+        //ï¿½ï¿½ï¿½xï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½
         velocity = Vector3.zero;
 
         warp wp = GetComponent<warp>();
         Vector3 curG = wp.gravityDirection / 9.81f;
-        //d—Í•ûŒü‚ÆC WASD“ü—Í‚©•ûŒüƒL[‚©‚çA…•½‚È’n–Ê‚ğˆÚ“®‚·‚é•ûŒü(velocity)‚ğ“¾‚é
+        //ï¿½dï¿½Í•ï¿½ï¿½ï¿½ï¿½ÆC WASDï¿½ï¿½ï¿½Í‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Lï¿½[ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½È’nï¿½Ê‚ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(velocity)ï¿½ğ“¾‚ï¿½
         if (curG == Vector3.down) //Maze1
         {
             if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
@@ -110,17 +120,17 @@ public class move_player : MonoBehaviour
             refCamera.hRotation *= Quaternion.Euler(0, 0, refCamera.mx);
         }
 
-        // ‘¬“xƒxƒNƒgƒ‹‚Ì’·‚³‚ğ1•b‚ÅmoveSpeed‚¾‚¯i‚Ş‚æ‚¤‚É’²®
+        // ï¿½ï¿½ï¿½xï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½Ì’ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½bï¿½ï¿½moveSpeedï¿½ï¿½ï¿½ï¿½ï¿½iï¿½Ş‚æ‚¤ï¿½É’ï¿½ï¿½ï¿½
         velocity = velocity.normalized * moveSpeed * Time.deltaTime;
 
        
         
-        // ‚¢‚¸‚ê‚©‚Ì•ûŒü‚ÉˆÚ“®‚µ‚Ä‚¢‚éê‡
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ê‚©ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ÉˆÚ“ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡
         if (velocity.magnitude > 0)
         {
-            // ƒvƒŒƒCƒ„[‚Ì‰ñ“](transform.rotation)‚ÌXV
-            // –³‰ñ“]ó‘Ô‚ÌƒvƒŒƒCƒ„[‚ÌZ+•ûŒü(Œã“ª•”)‚ğA
-            // ƒJƒƒ‰‚Ì…•½‰ñ“](refCamera.hRotation)‚Å‰ñ‚µ‚½ˆÚ“®‚Ì”½‘Î•ûŒü(-velocity)‚É‰ñ‚·‰ñ“]‚É’iX‹ß‚Ã‚¯‚é
+            // ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì‰ï¿½](transform.rotation)ï¿½ÌXï¿½V
+            // ï¿½ï¿½ï¿½ï¿½]ï¿½ï¿½Ô‚Ìƒvï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½Z+ï¿½ï¿½ï¿½ï¿½(ï¿½ã“ªï¿½ï¿½)ï¿½ï¿½ï¿½A
+            // ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½](refCamera.hRotation)ï¿½Å‰ñ‚µ‚ï¿½ï¿½Ú“ï¿½ï¿½Ì”ï¿½ï¿½Î•ï¿½ï¿½ï¿½(-velocity)ï¿½É‰ñ‚·‰ï¿½]ï¿½É’iï¿½Xï¿½ß‚Ã‚ï¿½ï¿½ï¿½
             //transform.rotation = Quaternion.Slerp(transform.rotation,
             //                                       Quaternion.LookRotation(hRotation * -velocity),
             //                                       applySpeed);
@@ -128,16 +138,91 @@ public class move_player : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(refCamera.hRotation * velocity);
         }
 
-        // ƒvƒŒƒCƒ„[‚ÌˆÊ’u(transform.position)‚ÌXV
-        // ƒJƒƒ‰‚Ì…•½‰ñ“](refCamera.hRotation)‚Å‰ñ‚µ‚½ˆÚ“®•ûŒü(velocity)‚ğ‘«‚µ‚İ
+        // ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌˆÊ’u(transform.position)ï¿½ÌXï¿½V
+        // ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½](refCamera.hRotation)ï¿½Å‰ñ‚µ‚ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½(velocity)ï¿½ğ‘«‚ï¿½ï¿½ï¿½ï¿½ï¿½
         transform.position += refCamera.hRotation * velocity;
 
         pastG = curG;
-        
-        //ƒfƒoƒbƒO—p
-        //Debug.Log(velocity.magnitude);
-        //Debug.Log(transform.up);
+
+        if (hasJump && isGrounded && Input.GetKeyDown(KeyCode.Space))
+        {
+            rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+        }
     }
+
+    // ï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½vï¿½tï¿½^ï¿½iï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚Î‚ï¿½ï¿½j
+    public void Jump()
+    {
+        if (!hasJump)
+        {
+            hasJump = true;
+            GetComponent<Renderer>().material.color = Color.red;
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+            StartCoroutine(JumpTimeLimit(10f));
+        }
+    }
+
+    private IEnumerator JumpTimeLimit(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        hasJump = false;
+        GetComponent<Renderer>().material.color = Color.white;
+    }
+
+    // ï¿½ï¿½ ï¿½Ú’nï¿½ï¿½ï¿½ï¿½iï¿½nï¿½Ê‚Æ‚ÌÚGï¿½ï¿½ï¿½mï¿½Fï¿½j
+    void OnCollisionStay(Collision collision)
+    {
+        // ï¿½nï¿½Ê‚ÆÚGï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½trueï¿½iLayerï¿½ï¿½^ï¿½Oï¿½Åiï¿½ï¿½ï¿½Ä‚ï¿½OKï¿½j
+        isGrounded = true;
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        isGrounded = false;
+    }
+
+    // ï¿½ï¿½ï¿½^ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚Î‚ï¿½ï¿½j
+    public void AddTime(float timeDelta)
+    {
+        GetComponent<Renderer>().material.color = Color.blue;
+        time_attack ta = FindObjectOfType<time_attack>();
+        if (ta != null)
+        {
+            ta.AddTimeFromItem(timeDelta);
+        }
+    }
+
+    public void Speed(float multiplier, float duration)
+    {
+        StartCoroutine(SpeedBuff(multiplier, duration));
+    }
+
+    private IEnumerator SpeedBuff(float multiplier, float duration)
+    {
+        float originalSpeed = moveSpeed;
+        moveSpeed *= multiplier;
+        GetComponent<Renderer>().material.color = Color.gray; // ï¿½Fï¿½Åƒoï¿½tï¿½ï¿½\ï¿½ï¿½
+        yield return new WaitForSeconds(duration);
+        moveSpeed = originalSpeed;
+        GetComponent<Renderer>().material.color = Color.white;
+    }
+
+    public void Reduce(float factor, float duration)
+    {
+        StartCoroutine(SpeedDebuffRoutine(factor, duration));
+    }
+
+    private IEnumerator SpeedDebuffRoutine(float factor, float duration)
+    {
+        float originalSpeed = moveSpeed;
+        moveSpeed *= factor; // ï¿½ï¿½: factor = 0.5f ï¿½Å”ï¿½ï¿½ï¿½ï¿½Ì‘ï¿½ï¿½xï¿½ï¿½
+        GetComponent<Renderer>().material.color = Color.cyan; // ï¿½Fï¿½ğ…Fï¿½ï¿½
+        yield return new WaitForSeconds(duration);
+        moveSpeed = originalSpeed;
+        GetComponent<Renderer>().material.color = Color.white; // ï¿½ï¿½ï¿½ÌFï¿½É–ß‚ï¿½
+    }
+
+    
 
 }
 
