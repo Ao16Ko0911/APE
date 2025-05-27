@@ -21,7 +21,7 @@ public class warp : MonoBehaviour
         public Vector3 localOffset; //ワープ先のオフセット
     }
 
-    [HideInInspector]
+    
     public List<WarpInfo> warpInfos = new List<WarpInfo>(); //ワープ情報のリスト
 
     // Start is called before the first frame update
@@ -36,7 +36,7 @@ public class warp : MonoBehaviour
         rb.AddForce(gravityDirection, ForceMode.Acceleration); // 重力を加える
 
         // プレイヤーを重力の逆方向（上方向）に回転させる
-        Quaternion Player = Quaternion.FromToRotation(transform.up, -gravityDirection.normalized) * transform.rotation;
+        Quaternion Player = Quaternion.FromToRotation(transform.up, -1 * gravityDirection.normalized) * transform.rotation;
     
     }
 
@@ -50,6 +50,8 @@ public class warp : MonoBehaviour
                 transform.rotation = warpInfo.targetMaze.rotation; //ワープ先の回転を取得
                 mainCamera.rotation = warpInfo.targetMaze.rotation; //カメラの回転を取得
                 transform.position = warpInfo.targetMaze.TransformPoint(warpInfo.localOffset); //ワープ先の座標
+                move_camera cam = mainCamera.GetComponent<move_camera>();
+                cam.GetComponent<move_camera>().SetJustWarped(); // プレイヤーに付いているカメラスクリプトに通知
                 break;
             }
         }
