@@ -39,6 +39,8 @@ public class time_attack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (player == null) return;
         if (!f_Goal)
         {
             elapsedTime = Time.time - startTime;
@@ -94,11 +96,5 @@ public class time_attack : MonoBehaviour
     }
 
 
-    IEnumerator ShowFinalTime()
-    {
-        yield return null; // 1フレーム待つ
-        TextTime.text = $"Time {elapsedTime:F2} sec"; // ← これが確実に画面に出る！
-        TextGoal.text = $"Goal!\nTime: {elapsedTime:F2} sec";
-    }
 
 }
