@@ -34,6 +34,8 @@ public class move_camera : MonoBehaviour
     void Update()
     {
 
+        if (player == null) return;
+
         //------カメラの移動------
 
         //プレイヤーの現在地の取得
