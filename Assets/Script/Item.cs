@@ -18,8 +18,8 @@ public class Item : MonoBehaviour
 
                 if (rand < 100)
                 {
-                    // 60〜69の10%でスピードバフ付与
-                    ps.Speed(4.0f, 5.0f); // 5秒間スピード2倍
+
+                    ps.AddTime(-5.0f); // 30–54 → 25%
                 }
 
                 if (rand < 10)
@@ -48,7 +48,7 @@ public class Item : MonoBehaviour
 
                 else if (rand < 89)
                 {
-                    ps.Reduce(0.5f, 5.0f); // スピード半分、5秒間
+                    ps.Reduce(0.75f, 5.0f); // スピード半分、5秒間
                 }
 
 

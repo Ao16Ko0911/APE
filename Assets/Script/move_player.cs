@@ -185,12 +185,21 @@ public class move_player : MonoBehaviour
     // ���^�C�������i�O������Ă΂��j
     public void AddTime(float timeDelta)
     {
-        GetComponent<Renderer>().material.color = Color.blue;
+        if (timeDelta > 0)
+        {
+            GetComponent<Renderer>().material.color = Color.blue; // 増加時は黄色
+        }
+        else if (timeDelta < 0)
+        {
+            GetComponent<Renderer>().material.color = Color.yellow; // 減少時は青
+        }
         time_attack ta = FindObjectOfType<time_attack>();
         if (ta != null)
         {
             ta.AddTimeFromItem(timeDelta);
+            
         }
+        
     }
 
     public void Speed(float multiplier, float duration)
