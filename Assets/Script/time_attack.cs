@@ -13,10 +13,12 @@ public class time_attack : MonoBehaviour
     private float elapsedTime;
     private float bestTime;  // ← 追加
     private bool f_Goal = false; // ゴールに到達したかどうかのフラグ
+    private float startTime;
 
     // Start is called before the first frame update
     void Start()
     {
+        startTime = Time.time; // ゲーム開始時の時刻を記録
         elapsedTime = 0.0f;
 
         // 保存されたベストタイムを読み込む（なければ9999.0fを初期値とする）
@@ -32,13 +34,15 @@ public class time_attack : MonoBehaviour
         }
     }
 
+    
+
     // Update is called once per frame
     void Update()
     {
         if (!f_Goal)
         {
-            elapsedTime += Time.deltaTime;
-            TextTime.text = string.Format("Time {0:F2} sec", elapsedTime);
+            elapsedTime = Time.time - startTime;
+            TextTime.text = $"Time {elapsedTime:F2} sec";
         }
     }
 
@@ -47,6 +51,7 @@ public class time_attack : MonoBehaviour
         if (other.gameObject.name == "Goal")
         {
             f_Goal = true;
+            TextTime.text = $"Time {elapsedTime:F2} sec"; // ゴール直後に表示更新
             TextGoal.text = $"Goal!\nTime: {elapsedTime:F2} sec";
 
             if (elapsedTime < bestTime)
@@ -68,12 +73,32 @@ public class time_attack : MonoBehaviour
         }
     }
 
-    //★タイム増減
+
+
     public void AddTimeFromItem(float timeDelta)
     {
-        elapsedTime += timeDelta;
-        if (elapsedTime < 0f) elapsedTime = 0f; // マイナスにならないように
+        startTime -= timeDelta; // 経過時間を調整
+        elapsedTime = Time.time - startTime;
+        if (elapsedTime < 0f) elapsedTime = 0f;
         TextTime.text = $"Time {elapsedTime:F2} sec";
+    }
+
+
+    //★ベストタイムをリセット
+    public void ResetBestTime()
+    {
+        PlayerPrefs.DeleteKey("BestTime");
+        bestTime = 9999.0f;
+        TextBestTime.text = "Best: ---";
+        Debug.Log("Best time reset!");
+    }
+
+
+    IEnumerator ShowFinalTime()
+    {
+        yield return null; // 1フレーム待つ
+        TextTime.text = $"Time {elapsedTime:F2} sec"; // ← これが確実に画面に出る！
+        TextGoal.text = $"Goal!\nTime: {elapsedTime:F2} sec";
     }
 
 }
