@@ -20,6 +20,10 @@ public class Item : MonoBehaviour
                 {
                     ps.Jump(); // 0–29 → 30%
                 }
+                else if(rand < 20)
+                {
+                    ps.reverse(5.0f);
+                }
                 else if (rand < 30)
                 {
                     
@@ -29,15 +33,7 @@ public class Item : MonoBehaviour
                 {
                     ps.AddTime(-5.0f); // 55– → 25%
                 }
-                else if (rand < 51)// 80–99 → ランダムワープ
-                {
-                    warp w = ps.GetComponent<warp>();
-                    if (w != null)
-                    {
-                        w.WarpToRandomPoint();
-                    }
-                }
-
+                
                 else if (rand < 70)
                 {
                     // 60〜69の10%でスピードバフ付与

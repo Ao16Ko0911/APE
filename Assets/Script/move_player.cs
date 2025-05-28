@@ -10,7 +10,7 @@ public class move_player : MonoBehaviour
     [SerializeField] private float moveSpeed = 5.0f;        // �ړ����x
     [SerializeField] private move_camera refCamera;  // �J�����̉�]���Q�Ƃ���p
     //[SerializeField] private float applySpeed = 0.2f; //��]���x
-    [SerializeField] private float buff; //�����E�����o�t
+    [SerializeField] public float buff; //�����E�����o�t
 
     //�M�~�b�N�n
     private bool hasJump = false; // �M�~�b�N�擾�ς݂�
@@ -18,14 +18,15 @@ public class move_player : MonoBehaviour
     private Rigidbody rb;
     private bool isGrounded = false; // �� �ڒn�t���O�ǉ�
 
-    
 
+    private Color orgColor;
     private Quaternion hRotation;
     private Vector3 pastG;
     private bool warp_flag;
 
     void Start()
     {
+        orgColor = GetComponent<Renderer>().material.color;
         hRotation = Quaternion.identity;
         rb = GetComponent<Rigidbody>();
         //�ŏ��̏d�͕����̎擾
@@ -166,7 +167,7 @@ public class move_player : MonoBehaviour
     {
         yield return new WaitForSeconds(duration);
         hasJump = false;
-        GetComponent<Renderer>().material.color = Color.white;
+        GetComponent<Renderer>().material.color = orgColor;
     }
 
     // �� �ڒn����i�n�ʂƂ̐ڐG���m�F�j
@@ -204,7 +205,7 @@ public class move_player : MonoBehaviour
         GetComponent<Renderer>().material.color = Color.gray; // �F�Ńo�t��\��
         yield return new WaitForSeconds(duration);
         moveSpeed = originalSpeed;
-        GetComponent<Renderer>().material.color = Color.white;
+        GetComponent<Renderer>().material.color = orgColor;
     }
 
     public void Reduce(float factor, float duration)
@@ -219,10 +220,23 @@ public class move_player : MonoBehaviour
         GetComponent<Renderer>().material.color = Color.cyan; // �F�𐅐F��
         yield return new WaitForSeconds(duration);
         moveSpeed = originalSpeed;
-        GetComponent<Renderer>().material.color = Color.white; // ���̐F�ɖ߂�
+        GetComponent<Renderer>().material.color = orgColor; // ���̐F�ɖ߂�
     }
 
-    
+    public void reverse(float duration)
+    {
+        StartCoroutine(ReverseRoutine(duration));
+    }
+
+    public IEnumerator ReverseRoutine(float duration)
+    {
+        float originalbuff = buff;
+        buff *= -1;
+        GetComponent<Renderer>().material.color = Color.green;
+        yield return new WaitForSeconds(duration);
+        buff = originalbuff;
+        GetComponent<Renderer>().material.color = orgColor;
+    }
 
 }
 
