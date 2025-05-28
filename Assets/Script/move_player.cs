@@ -44,13 +44,13 @@ public class move_player : MonoBehaviour
         if (curG == Vector3.down) //Maze1
         {
             if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
-                velocity.z += 1 * buff;
-            if (Input.GetKey(KeyCode.A) || Input.GetKey("left"))
-                velocity.x -= 1 * buff;
-            if (Input.GetKey(KeyCode.S) || Input.GetKey("down"))
                 velocity.z -= 1 * buff;
-            if (Input.GetKey(KeyCode.D) || Input.GetKey("right"))
+            if (Input.GetKey(KeyCode.A) || Input.GetKey("left"))
                 velocity.x += 1 * buff;
+            if (Input.GetKey(KeyCode.S) || Input.GetKey("down"))
+                velocity.z += 1 * buff;
+            if (Input.GetKey(KeyCode.D) || Input.GetKey("right"))
+                velocity.x -= 1 * buff;
 
             refCamera.hRotation *= Quaternion.Euler(0, refCamera.mx, 0);
         }

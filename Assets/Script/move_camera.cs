@@ -82,7 +82,7 @@ public class move_camera : MonoBehaviour
                 {
                     transform.position = player.transform.position + Vector3.right * 2 + Vector3.up;
                     transform.LookAt(player.transform);
-                    hRotation *= Quaternion.Euler(0, -90, 0);
+                    hRotation *= Quaternion.Euler(0, 90, 0);
                     Debug.Log("2to1");
                 }
                 else if (currentG == Vector3.up) //Maze3‚ÉˆÚ“®
@@ -153,7 +153,7 @@ public class move_camera : MonoBehaviour
                 {
                     transform.position = player.transform.position + Vector3.left * 2 + Vector3.up;
                     transform.LookAt(player.transform);
-                    hRotation *= Quaternion.Euler(0, 90, 0);
+                    hRotation *= Quaternion.Euler(0, -90, 0);
                     Debug.Log("4to1");
                 }
                 else if (currentG == Vector3.up) //Maze3‚ÉˆÚ“®
@@ -188,7 +188,6 @@ public class move_camera : MonoBehaviour
                 {
                     transform.position = player.transform.position + Vector3.forward * 2 + Vector3.up;
                     transform.LookAt(player.transform);
-                    hRotation *= Quaternion.Euler(0, 180, 0);
                     Debug.Log("5to1");
                 }
                 else if (currentG == Vector3.right) //Maze2‚ÉˆÚ“®
@@ -223,6 +222,7 @@ public class move_camera : MonoBehaviour
                 {
                     transform.position = player.transform.position + Vector3.back * 2 + Vector3.up;
                     transform.LookAt(player.transform);
+                    hRotation *= Quaternion.Euler(0, 180, 0);
                     Debug.Log("6to1");
                 }
                 else if (currentG == Vector3.right) //Maze2‚ÉˆÚ“®
