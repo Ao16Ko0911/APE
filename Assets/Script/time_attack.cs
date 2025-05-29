@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class time_attack : MonoBehaviour
 {
@@ -13,12 +14,14 @@ public class time_attack : MonoBehaviour
     private float elapsedTime;
     private float bestTime;  // ← 追加
     private bool f_Goal = false; // ゴールに到達したかどうかのフラグ
-    private float startTime;
+    
+
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        startTime = Time.time; // ゲーム開始時の時刻を記録
+
         elapsedTime = 0.0f;
 
         // 保存されたベストタイムを読み込む（なければ9999.0fを初期値とする）
@@ -41,9 +44,9 @@ public class time_attack : MonoBehaviour
     {
 
         if (player == null) return;
-        if (!f_Goal)
+        else if (!f_Goal)
         {
-            elapsedTime = Time.time - startTime;
+            elapsedTime += Time.deltaTime;
             TextTime.text = $"Time {elapsedTime:F2} sec";
         }
     }
@@ -79,10 +82,10 @@ public class time_attack : MonoBehaviour
 
     public void AddTimeFromItem(float timeDelta)
     {
-        startTime -= timeDelta; // 経過時間を調整
-        elapsedTime = Time.time - startTime;
+        elapsedTime += timeDelta;
         if (elapsedTime < 0f) elapsedTime = 0f;
         TextTime.text = $"Time {elapsedTime:F2} sec";
+
     }
 
 

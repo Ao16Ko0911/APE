@@ -182,8 +182,13 @@ public class move_player : MonoBehaviour
         isGrounded = false;
     }
 
+    public void AddTime(float timeDelta, float duration)
+    {
+        StartCoroutine(AddTimeBuff(timeDelta, duration));
+    }
+
     // ���^�C�������i�O������Ă΂��j
-    public void AddTime(float timeDelta)
+    public IEnumerator AddTimeBuff(float timeDelta, float duration)
     {
         if (timeDelta > 0)
         {
@@ -197,9 +202,16 @@ public class move_player : MonoBehaviour
         if (ta != null)
         {
             ta.AddTimeFromItem(timeDelta);
-            
+
+            yield return new WaitForSeconds(duration);
+            GetComponent<Renderer>().material.color = orgColor;
         }
-        
+        else
+        {
+            Debug.LogWarning("time_attack スクリプトが見つからない！");
+        }
+
+
     }
 
     public void Speed(float multiplier, float duration)
