@@ -270,16 +270,17 @@ public class move_camera : MonoBehaviour
 
 
         //------カメラの回転------
+        //altキーが入力されている場合，カメラ停止
+        if (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
+        {
+            return;
+        }
 
         // マウスの移動量を取得
         mx = Input.GetAxis("Mouse X");
         my = Input.GetAxis("Mouse Y");
 
-        //altキーが入力されている場合，カメラ停止
-        if(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
-        {
-            return;
-        }
+        
         
         // X方向に一定量移動していれば横回転
         if (Mathf.Abs(mx) > 0.01f)
