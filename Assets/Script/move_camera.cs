@@ -272,8 +272,8 @@ public class move_camera : MonoBehaviour
         //------カメラの回転------
 
         // マウスの移動量を取得
-        mx = Input.GetAxis("Mouse X") * 2.0f;
-        my = Input.GetAxis("Mouse Y") * 1.5f;
+        mx = Input.GetAxis("Mouse X");
+        my = Input.GetAxis("Mouse Y");
 
         
         // X方向に一定量移動していれば横回転
