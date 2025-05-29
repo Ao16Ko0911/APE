@@ -275,6 +275,11 @@ public class move_camera : MonoBehaviour
         mx = Input.GetAxis("Mouse X");
         my = Input.GetAxis("Mouse Y");
 
+        //altƒL[‚ª“ü—Í‚³‚ê‚Ä‚¢‚éê‡CƒJƒƒ‰’âŽ~
+        if(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
+        {
+            return;
+        }
         
         // X•ûŒü‚Éˆê’è—ÊˆÚ“®‚µ‚Ä‚¢‚ê‚Î‰¡‰ñ“]
         if (Mathf.Abs(mx) > 0.01f)
