@@ -182,15 +182,36 @@ public class move_player : MonoBehaviour
         isGrounded = false;
     }
 
-    // ���^�C�������i�O������Ă΂��j
-    public void AddTime(float timeDelta)
+    public void AddTime(float timeDelta, float duration)
     {
-        GetComponent<Renderer>().material.color = Color.blue;
+        StartCoroutine(AddTimeBuff(timeDelta, duration));
+    }
+
+    // ���^�C�������i�O������Ă΂��j
+    public IEnumerator AddTimeBuff(float timeDelta, float duration)
+    {
+        if (timeDelta > 0)
+        {
+            GetComponent<Renderer>().material.color = Color.blue; // 増加時は黄色
+        }
+        else if (timeDelta < 0)
+        {
+            GetComponent<Renderer>().material.color = Color.yellow; // 減少時は青
+        }
         time_attack ta = FindObjectOfType<time_attack>();
         if (ta != null)
         {
             ta.AddTimeFromItem(timeDelta);
+
+            yield return new WaitForSeconds(duration);
+            GetComponent<Renderer>().material.color = orgColor;
         }
+        else
+        {
+            Debug.LogWarning("time_attack スクリプトが見つからない！");
+        }
+
+
     }
 
     public void Speed(float multiplier, float duration)
